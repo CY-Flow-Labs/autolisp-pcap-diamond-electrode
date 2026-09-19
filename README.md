@@ -1,8 +1,8 @@
 # AutoLISP PCAP Diamond Electrode Generator
 
-A small, parameterized AutoLISP tool that creates a generic interleaved TX/RX diamond-electrode lattice for projected-capacitive (PCAP) mutual-capacitance exploration.
+A parameterized AutoLISP tool that creates a complete two-layer projected-capacitive (PCAP) diamond-sensor layout: electrodes, conductive fan-out, laser-isolation paths and FPC pin guides.
 
-這是一個參數化AutoLISP小工具，用來產生通用的投射式電容菱形電極示意格網。
+這是一個參數化 AutoLISP 工具，用來產生雙層投射式電容菱形感測器、周邊導線、雷射隔離線與 FPC pin 輔助線。
 
 ## Scope
 
@@ -12,36 +12,53 @@ The project creates editable CAD geometry for early layout, education and visual
 
 ## Features
 
-- Independent horizontal and vertical pitch
-- Configurable TX rows and RX columns
-- Configurable diamond gap and connector width
-- Separate TX, RX and connector layers
-- Reusable diamond block references for faster large-array generation
-- One Undo group for every generated lattice
-- Input validation and AutoCAD state restoration
-- No temporary global-selection layer
+- Independent TX/RX pitch and channel counts
+- Configurable electrode gap, neck width, route spacing and FPC pin pitch
+- Interactive RX and TX pin-bank placement
+- Complete Top/Bottom ITO electrode geometry
+- Complete Top/Bottom Ag fan-out
+- Complete Top/Bottom laser-isolation paths
+- Deterministic geometry; the same parameters no longer change with `CDATE`
+- Zero-length entities are rejected
+- No temporary cache layer, whole-drawing `ssget`, `PEDIT/JOIN`, or `ZOOM`
 
 ## Usage
 
 1. Load `pcap-diamond-generator.lsp` with AutoCAD `APPLOAD`.
-2. Run `PCAPDIAMOND`.
-3. Select the lower-left origin.
-4. Enter channel counts, pitch, gap and connector width, or accept the defaults.
+2. Run `PCAPSENSOR`.
+3. Enter the sensor parameters, or press Enter for the documented defaults.
+4. Select the RX and TX pin-bank center points.
+5. Pick once more when prompted to start generation (legacy-compatible workflow).
 
 Generated layers:
 
-- `PCAP_TX_ELECTRODE`
-- `PCAP_RX_ELECTRODE`
-- `PCAP_TX_INTERCONNECT`
-- `PCAP_RX_INTERCONNECT`
+- `Top ITO`
+- `Top Ag`
+- `Top laser`
+- `Bottom ITO`
+- `Bottom Ag`
+- `Bottom laser`
 
-Diamonds are stored as lightweight block references. Identical dimensions reuse the same block definition, reducing repeated vertex data and keeping larger drawings responsive. Connectors are created directly with DXF entities; the generator does not run `PEDIT`, `JOIN`, `FILLET`, `CHAMFER`, `ZOOM` or whole-drawing selection inside its loops.
+All repeated geometry is emitted directly from calculated points. The generator avoids the legacy temporary-layer/global-selection cycle that made larger layouts slow. A point-replay regression test confirms that all 1,439 effective LINE entities retain the same layer and endpoint coordinates as the legacy reference case; only three zero-length Ag entities were removed.
 
 Default pitch is 5 mm. It is only an editable starting point, not a production recommendation.
 
-## Design model
+## Reference drawing
 
-TX diamonds form horizontal chains. RX diamonds form vertical chains offset by one pitch in both axes. The conductors are separated into dedicated CAD layers to represent a generic two-layer layout. Edge routing, tail design, bridges, shielding and fabrication compensation are intentionally outside this project.
+The checked reference uses TX 10, RX 6, 5-unit pitch, 1.0 neck, 0.6 gap, 0.1 route spacing and 0.8 pin pitch:
+
+- [`pcap-sensor-corrected-preview.png`](pcap-sensor-corrected-preview.png)
+- `pcap-sensor-corrected-preview.dxf` is generated locally and intentionally ignored by Git.
+
+Regenerate both files without AutoCAD:
+
+```bash
+python tools/render_lsp_preview.py
+```
+
+The renderer executes the coordinate/math subset used by this LSP and writes
+the resulting LINE entities directly. AutoCAD/BricsCAD remains the final host
+for checking command interaction, `FILLET` and `CHAMFER` behavior.
 
 ## Public references
 
@@ -53,7 +70,7 @@ Patent publications are cited as technical background, not as a patent-clearance
 
 ## Privacy and provenance
 
-This repository contains newly written generic geometry code and synthetic defaults. It contains no employer, customer or production drawing; no proprietary stack-up; and no historical source file.
+This repository contains a public modernization of a user-owned personal utility, generic defaults and synthetic reference coordinates. It contains no employer/customer production drawing, proprietary stack-up, customer identifier or historical source file.
 
 ## License
 
