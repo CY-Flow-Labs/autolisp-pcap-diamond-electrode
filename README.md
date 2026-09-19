@@ -1,5 +1,16 @@
 # AutoLISP PCAP Diamond Electrode Generator
 
+> **Experimental software / 實驗性程式**
+>
+> This project is under active validation. Its point-generated geometry has
+> been regression-checked, but command interaction and final `FILLET` / `CHAMFER`
+> behavior still require verification in AutoCAD or BricsCAD. Do not use the
+> generated drawing directly for production or fabrication.
+>
+> 本專案仍在驗證階段。點對點幾何已完成回歸比對，但指令互動與最後的
+> `FILLET`／`CHAMFER` 行為仍須在 AutoCAD 或 BricsCAD 實機確認；產出圖面
+> 不可未經工程與製程審查就直接用於量產或加工。
+
 A parameterized AutoLISP tool that creates a complete two-layer projected-capacitive (PCAP) diamond-sensor layout: electrodes, conductive fan-out, laser-isolation paths and FPC pin guides.
 
 這是一個參數化 AutoLISP 工具，用來產生雙層投射式電容菱形感測器、周邊導線、雷射隔離線與 FPC pin 輔助線。
