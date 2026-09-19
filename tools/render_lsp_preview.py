@@ -408,8 +408,10 @@ COLORS = {
 }
 
 
-def render_png(replay: Replay, output: Path, label: str):
-    visible = [line for line in replay.lines if line["layer"].lower() != "cache"]
+def render_png(replay: Replay, output: Path, label: str, allowed_layers=None):
+    visible = [line for line in replay.lines
+               if line["layer"].lower() != "cache"
+               and (allowed_layers is None or line["layer"] in allowed_layers)]
     xs = [p for line in visible for p in (line["a"][0], line["b"][0])]
     ys = [p for line in visible for p in (line["a"][1], line["b"][1])]
     min_x, max_x, min_y, max_y = min(xs), max(xs), min(ys), max(ys)
@@ -449,6 +451,13 @@ def main():
     png = root / f"{stem}.png"
     dxf.write_text(dxf_text(replay), encoding="ascii")
     render_png(replay, png, source.name)
+    if source.name == "pcap-diamond-generator.lsp":
+        render_png(replay, root / "pcap-sensor-electrodes-preview.png", source.name,
+                   {"Top ITO", "Bottom ITO"})
+        render_png(replay, root / "pcap-sensor-ag-routing-preview.png", source.name,
+                   {"Top Ag", "Bottom Ag"})
+        render_png(replay, root / "pcap-sensor-laser-preview.png", source.name,
+                   {"Top laser", "Bottom laser"})
     counts = {}
     for line in replay.lines:
         counts[line["layer"]] = counts.get(line["layer"], 0) + 1

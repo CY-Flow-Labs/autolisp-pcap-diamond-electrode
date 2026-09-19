@@ -48,6 +48,9 @@ Default pitch is 5 mm. It is only an editable starting point, not a production r
 The checked reference uses TX 10, RX 6, 5-unit pitch, 1.0 neck, 0.6 gap, 0.1 route spacing and 0.8 pin pitch:
 
 - [`pcap-sensor-corrected-preview.png`](pcap-sensor-corrected-preview.png)
+- [`pcap-sensor-electrodes-preview.png`](pcap-sensor-electrodes-preview.png)
+- [`pcap-sensor-ag-routing-preview.png`](pcap-sensor-ag-routing-preview.png)
+- [`pcap-sensor-laser-preview.png`](pcap-sensor-laser-preview.png)
 - `pcap-sensor-corrected-preview.dxf` is generated locally and intentionally ignored by Git.
 
 Regenerate both files without AutoCAD:
