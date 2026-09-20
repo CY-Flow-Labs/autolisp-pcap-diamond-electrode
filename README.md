@@ -50,7 +50,7 @@ Generated layers:
 - `Bottom Ag`
 - `Bottom laser`
 
-All repeated geometry is emitted directly from calculated points. The generator avoids the legacy temporary-layer/global-selection cycle that made larger layouts slow. A point-replay regression test confirms that all 1,439 effective LINE entities retain the same layer and endpoint coordinates as the legacy reference case; only three zero-length Ag entities were removed.
+All repeated geometry is emitted directly from calculated points. The generator avoids the legacy temporary-layer/global-selection cycle that made larger layouts slow. A point-replay regression test confirms that all 1,439 effective LINE entities retain the legacy endpoint coordinates. Of those, 1,417 retain their original layers and 22 pin-isolation lines were reassigned from Layer 0 to the appropriate Top/Bottom laser layers. Three zero-length Ag entities were removed.
 
 Default pitch is 5 mm. It is only an editable starting point, not a production recommendation.
 
@@ -64,7 +64,7 @@ The checked reference uses TX 10, RX 6, 5-unit pitch, 1.0 neck, 0.6 gap, 0.1 rou
 - [`pcap-sensor-laser-preview.png`](pcap-sensor-laser-preview.png)
 - `pcap-sensor-corrected-preview.dxf` is generated locally and intentionally ignored by Git.
 
-Regenerate both files without AutoCAD:
+Regenerate the DXF and preview images without AutoCAD:
 
 ```bash
 python tools/render_lsp_preview.py
